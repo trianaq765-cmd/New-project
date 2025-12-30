@@ -1,0 +1,25 @@
+# ============================================
+# REQUIREMENTS - Lua Obfuscator
+# ============================================
+
+# Web Framework
+Flask==3.0.0
+flask-cors==4.0.0
+Werkzeug==3.0.1
+
+# Discord Bot
+discord.py==2.3.2
+aiohttp==3.9.1
+
+# Utilities
+python-dotenv==1.0.0
+
+# Production Server
+gunicorn==21.2.0
+
+# Optional: Rate Limiting
+# flask-limiter==3.5.0
+
+# Optional: Database (for production)
+# redis==5.0.1
+# psycopg2-binary==2.9.9
