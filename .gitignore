@@ -1,0 +1,106 @@
+# ============================================
+# GITIGNORE - Lua Obfuscator
+# ============================================
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ===== Virtual Environment =====
+venv/
+ENV/
+env/
+.venv/
+.env
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ===== OS =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ===== Logs =====
+*.log
+logs/
+npm-debug.log*
+
+# ===== Environment Variables =====
+.env
+.env.local
+.env.*.local
+*.env
+
+# ===== Testing =====
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# ===== Build =====
+*.manifest
+*.spec
+
+# ===== Temp Files =====
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+
+# ===== Database =====
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== Secrets =====
+secrets/
+*.pem
+*.key
+*.crt
+credentials.json
+
+# ===== Render =====
+.render/
+
+# ===== Project Specific =====
+scripts/
+output/
+*.lua.obf
