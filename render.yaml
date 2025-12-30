@@ -1,0 +1,44 @@
+# ============================================
+# RENDER.YAML - Deployment Configuration
+# ============================================
+
+services:
+  # ===== API Server =====
+  - type: web
+    name: lua-obfuscator-api
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DEBUG
+        value: false
+      - key: MAX_CODE_SIZE
+        value: 100000
+      - key: SCRIPT_EXPIRY
+        value: 86400
+
+  # ===== Discord Bot =====
+  - type: worker
+    name: lua-obfuscator-bot
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: API_URL
+        fromService:
+          name: lua-obfuscator-api
+          type: web
+          property: host
