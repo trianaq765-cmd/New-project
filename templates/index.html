@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lua Obfuscator - Roblox 2025</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79b8ff;
+            --success: #3fb950;
+            --error: #f85149;
+            --warning: #d29922;
+            --border: #30363d;
+            --code-bg: #0d1117;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: var(--accent);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Badges */
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            background: var(--bg-tertiary);
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        
+        .badge.accent {
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+        
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Editor Panel */
+        .panel {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            background: var(--bg-tertiary);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .panel-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .panel-title i {
+            color: var(--accent);
+        }
+        
+        .panel-body {
+            padding: 1rem;
+        }
+        
+        /* Code Editor */
+        .code-editor {
+            width: 100%;
+            height: 350px;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .code-editor:focus {
+            border-color: var(--accent);
+        }
+        
+        .code-editor::placeholder {
+            color: var(--text-secondary);
+        }
+        
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .level-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .level-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+        
+        .level-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+        
+        .level-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent);
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-card {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+        
+        /* Output */
+        .output-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .output-controls .btn {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+        }
+        
+        /* Loadstring URL */
+        .loadstring-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .loadstring-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .loadstring-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--success);
+            word-break: break-all;
+        }
+        
+        /* Status Messages */
+        .status {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status.show {
+            display: flex;
+        }
+        
+        .status.success {
+            background: rgba(63, 185, 80, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+        
+        .status.error {
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+        
+        .status.loading {
+            background: rgba(88, 166, 255, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: border-color 0.2s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(88, 166, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-lock"></i>
+            <span>Lua Obfuscator</span>
+        </div>
+        <nav class="nav-links">
+            <a href="#"><i class="fas fa-home"></i> Home</a>
+            <a href="#features"><i class="fas fa-star"></i> Features</a>
+            <a href="https://github.com" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://discord.gg" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero -->
+        <section class="hero">
+            <h1>🔒 Lua/Luau Obfuscator</h1>
+            <p>Advanced code obfuscation for Roblox scripts. Compatible with all major executors in 2025-2026.</p>
+            <div class="badges">
+                <span class="badge accent">Roblox 2025</span>
+                <span class="badge">Synapse X</span>
+                <span class="badge">Fluxus</span>
+                <span class="badge">KRNL</span>
+                <span class="badge">Script-Ware</span>
+                <span class="badge">Hydrogen</span>
+            </div>
+        </section>
+        
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Input Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">
+                        <i class="fas fa-code"></i>
+                        Input Code
+                    </span>
+                    <button class="btn btn-secondary" onclick="loadExample()">
+                        <i class="fas fa-flask"></i> Example
+                    </button>
+                </div>
+                <div class="panel-body">
+                    <textarea 
+                        class="code-editor" 
+                        id="inputCode" 
+                        placeholder="-- Paste your Lua code here...
+
+print('Hello World')
+
+local function greet(name)
+    return 'Hello, ' .. name .. '!'
+end
+
+print(greet('Roblox'))"
+                    ></textarea>
+                    
+                    <div class="controls">
+                        <div class="level-selector">
+                            <button class="level-btn" data-level="1" onclick="setLevel(1)">
+                                Level 1
+                            </button>
+                            <button class="level-btn active" data-level="2" onclick="setLevel(2)">
+                                Level 2
+                            </button>
+                            <button class="level-btn" data-level="3" onclick="setLevel(3)">
+                                Level 3
+                            </button>
+                        </div>
+                        
+                        <button class="btn btn-primary" id="obfuscateBtn" onclick="obfuscate()">
+                            <i class="fas fa-shield-alt"></i>
+                            Obfuscate
+                        </button>
+                        
+                        <button class="btn btn-secondary" onclick="clearInput()">
+                            <i class="fas fa-trash"></i>
+                            Clear
+                        </button>
+                    </div>
+                    
+                    <div class="status" id="status">
+                        <i class="fas fa-circle-notch loading-spinner"></i>
+                        <span>Processing...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Output Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">
+                        <i class="fas fa-file-code"></i>
+                        Output Code
+                    </span>
+                    <div class="output-controls">
+                        <button class="btn btn-secondary" onclick="copyOutput()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadOutput()">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <textarea 
+                        class="code-editor" 
+                        id="outputCode" 
+                        placeholder="-- Obfuscated code will appear here..."
+                        readonly
+                    ></textarea>
+                    
+                    <div class="stats" id="stats" style="display: none;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="statOriginal">0</div>
+                            <div class="stat-label">Original</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="statObfuscated">0</div>
+                            <div class="stat-label">Obfuscated</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="statRatio">0x</div>
+                            <div class="stat-label">Ratio</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="statLevel">2</div>
+                            <div class="stat-label">Level</div>
+                        </div>
+                    </div>
+                    
+                    <div class="loadstring-box" id="loadstringBox" style="display: none;">
+                        <div class="loadstring-label">🎮 Roblox Loadstring:</div>
+                        <code class="loadstring-code" id="loadstringCode"></code>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features -->
+        <section class="features" id="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <div class="feature-title">XOR Encryption</div>
+                <div class="feature-desc">Encrypt payload with XOR cipher using bit32 compatible operations.</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-text-slash"></i>
+                </div>
+                <div class="feature-title">String Encoding</div>
+                <div class="feature-desc">Convert all strings to byte arrays with lookup table (0-255).</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-random"></i>
+                </div>
+                <div class="feature-title">Variable Obfuscation</div>
+                <div class="feature-desc">Rename variables to confusing names (l, I, 1, O, 0).</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <div class="feature-title">Control Flow</div>
+                <div class="feature-desc">Add fake branches and opaque predicates.</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <div class="feature-title">Junk Code</div>
+                <div class="feature-desc">Inject dead code to confuse decompilers.</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-virus"></i>
+                </div>
+                <div class="feature-title">Anti-Tamper</div>
+                <div class="feature-desc">Environment checks and integrity validation.</div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Made with ❤️ for Roblox developers | Lua Obfuscator v2.1</p>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // State
+        let currentLevel = 2;
+        let lastResult = null;
+        
+        // API URL
+        const API_URL = window.location.origin;
+        
+        // Set Level
+        function setLevel(level) {
+            currentLevel = level;
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.dataset.level) === level) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+        
+        // Show Status
+        function showStatus(type, message) {
+            const status = document.getElementById('status');
+            status.className = `status show ${type}`;
+            status.innerHTML = type === 'loading' 
+                ? `<i class="fas fa-circle-notch loading-spinner"></i> ${message}`
+                : `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    status.classList.remove('show');
+                }, 3000);
+            }
+        }
+        
+        // Obfuscate
+        async function obfuscate() {
+            const input = document.getElementById('inputCode').value.trim();
+            
+            if (!input) {
+                showStatus('error', 'Please enter some code first!');
+                return;
+            }
+            
+            const btn = document.getElementById('obfuscateBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch loading-spinner"></i> Processing...';
+            
+            showStatus('loading', 'Obfuscating your code...');
+            
+            try {
+                const response = await fetch(`${API_URL}/obfuscate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        code: input,
+                        level: currentLevel
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                
+                lastResult = result;
+                
+                // Update output
+                document.getElementById('outputCode').value = result.obfuscated;
+                
+                // Update stats
+                const stats = result.stats;
+                document.getElementById('statOriginal').textContent = stats.original.toLocaleString();
+                document.getElementById('statObfuscated').textContent = stats.obfuscated.toLocaleString();
+                document.getElementById('statRatio').textContent = `${stats.ratio}x`;
+                document.getElementById('statLevel').textContent = stats.level;
+                document.getElementById('stats').style.display = 'grid';
+                
+                // Update loadstring
+                document.getElementById('loadstringCode').textContent = result.roblox_usage;
+                document.getElementById('loadstringBox').style.display = 'block';
+                
+                showStatus('success', 'Obfuscation complete!');
+                
+            } catch (error) {
+                showStatus('error', error.message);
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-shield-alt"></i> Obfuscate';
+            }
+        }
+        
+        // Copy Output
+        function copyOutput() {
+            const output = document.getElementById('outputCode').value;
+            if (!output) {
+                showStatus('error', 'Nothing to copy!');
+                return;
+            }
+            
+            navigator.clipboard.writeText(output).then(() => {
+                showStatus('success', 'Copied to clipboard!');
+            }).catch(err => {
+                showStatus('error', 'Failed to copy!');
+            });
+        }
+        
+        // Download Output
+        function downloadOutput() {
+            const output = document.getElementById('outputCode').value;
+            if (!output) {
+                showStatus('error', 'Nothing to download!');
+                return;
+            }
+            
+            const blob = new Blob([output], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `obfuscated_${lastResult?.key || 'script'}.lua`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showStatus('success', 'Downloaded!');
+        }
+        
+        // Clear Input
+        function clearInput() {
+            document.getElementById('inputCode').value = '';
+            document.getElementById('outputCode').value = '';
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('loadstringBox').style.display = 'none';
+            lastResult = null;
+        }
+        
+        // Load Example
+        function loadExample() {
+            document.getElementById('inputCode').value = `-- Example Roblox Script
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local function greet(name)
+    print("Hello, " .. name .. "!")
+    return true
+end
+
+local function main()
+    local playerName = player.Name
+    greet(playerName)
+    
+    for i = 1, 10 do
+        print("Count: " .. i)
+        wait(1)
+    end
+end
+
+main()`;
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                obfuscate();
+            }
+        });
+    </script>
+</body>
+</html>
